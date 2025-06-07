@@ -1,14 +1,14 @@
 # Name of the GitHub Actions workflow.
-name: ROS 2 CI
+name: ROS2 CICD
 
 # Controls when the workflow will run.
 on:
   # Triggers the workflow on push events but only for the "main" branch.
   push:
-    branches: [ "main" ]
+    branches: [ "master" ]
   # Triggers the workflow on pull request events targeting the "main" branch.
   pull_request:
-    branches: [ "main" ]
+    branches: [ "master" ]
 
 jobs:
   # Job 1: Build the image and run tests.
