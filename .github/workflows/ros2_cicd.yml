@@ -35,6 +35,8 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:latest
 
       # Step 1.3: Run the container and execute build and test commands.
+      # --parallel-workers 1: is used to avoid the error while runing github. due to the colcon agressive(parallel build) github throws 
+      # out of memory error. So it will cause slow build but avoid memory related error and will be more stable
       - name: Run Build and Test inside Container
         run: |
           docker run \
@@ -44,10 +46,10 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
           
           echo "------ Building ROS 2 Workspace ------"
-          docker exec ros2_ci_container bash -c "colcon build --symlink-install"
+          docker exec ros2_ci_container bash -c "colcon build --symlink-install --parallel-workers 1"
           
           echo "------ Running ROS 2 Tests ------"
-          docker exec ros2_ci_container bash -c "colcon test"
+          docker exec ros2_ci_container bash -c "colcon test --parallel-workers 1"
           
           echo "------ Displaying Test Results ------"
           docker exec ros2_ci_container bash -c "colcon test-result --verbose"
