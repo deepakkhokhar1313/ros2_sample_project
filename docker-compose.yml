@@ -1,0 +1,56 @@
+services:
+  ros2-dev:
+    # Build the image from the Dockerfile in the current directory.
+    # This ensures your custom environment is used.
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Pass host user/group IDs to the Dockerfile build process.
+      # This makes sure files created in the container have the correct ownership
+      # on your host machine, avoiding permission errors.
+      args:
+        USER_ID: ${UID:-1013}
+        GROUP_ID: ${GID:-1013}
+
+    # Name the container for easy reference (e.g., with 'docker exec').
+    container_name: ros2_project_container
+
+    # --- Hardware & Display Access (Performance Optimized) ---
+
+    # Most efficient network setting. The container shares the host's network
+    # stack directly, eliminating network address translation (NAT) overhead.
+    # Ideal for robotics where low-latency communication is key.
+    network_mode: "host"
+
+    # Grant access to all NVIDIA GPUs using the NVIDIA Container Toolkit.
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, utility, graphics, display, compute]
+
+    # Required for accessing host devices like USB cameras, LIDAR, etc.
+    privileged: true
+
+    # Forward the GUI display from the container to your host machine.
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1 # A common fix for Qt-based GUI tools.
+    volumes:
+      # Mount the X11 socket for GUI forwarding.
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      
+      # --- Workspace & Code Mount (Development Efficiency) ---
+
+      # Mount your local 'src' folder into the container's workspace.
+      # This is the core of the development workflow: edit code on your host,
+      # and compile/run it inside the container instantly
+      - ./src:/home/rosuser/ros2_ws/src:rw.
+
+      
+
+    # Keep the container running and enable an interactive terminal.
+    stdin_open: true
+    tty: true

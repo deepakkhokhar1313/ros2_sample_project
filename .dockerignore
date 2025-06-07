@@ -1,0 +1,14 @@
+# Ignore files and directories related to the build process.
+# This prevents them from being sent to the Docker daemon, speeding up builds.
+build/
+install/
+log/
+
+# Ignore common version control, development, and environment files.
+.git/
+.gitignore
+.vscode/
+.env*
+*.pyc
+*.log
+__pycache__/
