@@ -22,12 +22,11 @@ jobs:
 
     steps:
       # Step 1.1: Increase Swap Space on the Runner
-      # This provides more virtual memory to prevent out-of-memory errors (exit code 137)
-      # during memory-intensive compilations like 'colcon build'.
+      # This provides more virtual memory to prevent out-of-memory errors (exit code 137).
       - name: Increase Runner Swap Space
         uses: pierotofy/set-swap-space@master
         with:
-          swap-size-gb: 10
+          swap-size-gb: 16
 
       # Step 1.2: Check out your repository under $GITHUB_WORKSPACE.
       - name: Checkout Repository
@@ -42,26 +41,14 @@ jobs:
           load: true # Load the image into the local Docker daemon for testing.
           tags: ${{ env.IMAGE_NAME }}:latest
 
-      # Step 1.4: Run the container and execute build and test commands.
-      - name: Run Build and Test inside Container
+      # Step 1.4: Run build and test directly inside a new container.
+      # This is more memory-efficient than running a detached container and using 'docker exec'.
+      - name: Build and Test ROS 2 Workspace
         run: |
-          docker run \
-            -d \
-            --name ros2_ci_container \
+          docker run --rm \
             -v ${{ github.workspace }}/src:/home/rosuser/ros2_ws/src \
-            ${{ env.IMAGE_NAME }}:latest
-          
-          echo "------ Building ROS 2 Workspace ------"
-          # Use --executor sequential to force a single-threaded build, which is the most memory-safe option.
-          docker exec ros2_ci_container bash -c "colcon build --symlink-install --executor sequential"
-          
-          echo "------ Running ROS 2 Tests ------"
-          # Limit parallel workers here as well for consistency.
-          docker exec ros2_ci_container bash -c "colcon test --executor sequential"
-          
-          echo "------ Displaying Test Results ------"
-          # This command will exit with an error code if any tests failed.
-          docker exec ros2_ci_container bash -c "colcon test-result --verbose"
+            ${{ env.IMAGE_NAME }}:latest \
+            bash -c "colcon build --symlink-install --executor sequential --cmake-args -j1 && colcon test --executor sequential && colcon test-result --verbose"
 
   # Job 2: Push the image to Docker Hub.
   push-to-dockerhub:
