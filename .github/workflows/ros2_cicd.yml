@@ -21,11 +21,19 @@ jobs:
       IMAGE_NAME: ros2-project-image
 
     steps:
-      # Step 1.1: Check out your repository under $GITHUB_WORKSPACE.
+      # Step 1.1: Increase Swap Space on the Runner
+      # This provides more virtual memory to prevent out-of-memory errors (exit code 137)
+      # during memory-intensive compilations like 'colcon build'.
+      - name: Increase Runner Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 10
+
+      # Step 1.2: Check out your repository under $GITHUB_WORKSPACE.
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Step 1.2: Build the Docker image from your Dockerfile.
+      # Step 1.3: Build the Docker image from your Dockerfile.
       # We load the image locally to run tests on it.
       - name: Build Docker Image for Testing
         uses: docker/build-push-action@v5
@@ -34,9 +42,7 @@ jobs:
           load: true # Load the image into the local Docker daemon for testing.
           tags: ${{ env.IMAGE_NAME }}:latest
 
-      # Step 1.3: Run the container and execute build and test commands.
-      # --parallel-workers 1: is used to avoid the error while runing github. due to the colcon agressive(parallel build) github throws 
-      # out of memory error. So it will cause slow build but avoid memory related error and will be more stable
+      # Step 1.4: Run the container and execute build and test commands.
       - name: Run Build and Test inside Container
         run: |
           docker run \
@@ -46,12 +52,15 @@ jobs:
             ${{ env.IMAGE_NAME }}:latest
           
           echo "------ Building ROS 2 Workspace ------"
-          docker exec ros2_ci_container bash -c "colcon build --symlink-install --parallel-workers 1"
+          # Use --executor sequential to force a single-threaded build, which is the most memory-safe option.
+          docker exec ros2_ci_container bash -c "colcon build --symlink-install --executor sequential"
           
           echo "------ Running ROS 2 Tests ------"
-          docker exec ros2_ci_container bash -c "colcon test --parallel-workers 1"
+          # Limit parallel workers here as well for consistency.
+          docker exec ros2_ci_container bash -c "colcon test --executor sequential"
           
           echo "------ Displaying Test Results ------"
+          # This command will exit with an error code if any tests failed.
           docker exec ros2_ci_container bash -c "colcon test-result --verbose"
 
   # Job 2: Push the image to Docker Hub.
