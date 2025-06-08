@@ -1,0 +1,8 @@
+# The GOAL is the target number to count down from
+int32 target_number
+---
+# The RESULT is a simple string indicating completion
+string status
+---
+# The FEEDBACK is the current number in the countdown
+int32 current_number

@@ -1,5 +1,6 @@
 from setuptools import find_packages, setup
-
+from glob import glob
+import os
 package_name = 'py_pubsub'
 
 setup(
@@ -10,6 +11,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        # Include all launch files from the 'launch' directory
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*.launch.py')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -22,6 +25,10 @@ setup(
         'console_scripts': [
             'talker = py_pubsub.talker:main',
             'listener = py_pubsub.listener:main',
+            'service_server = py_pubsub.service_server:main',
+            'service_client = py_pubsub.service_client:main',
+            'action_server = py_pubsub.action_server:main',
+            'action_client = py_pubsub.action_client:main'
         ],
     },
 )

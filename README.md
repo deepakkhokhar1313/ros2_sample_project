@@ -1,4 +1,22 @@
 # ros2_sample_project
+## Some important Commands:
+# 1. To launch a launch file: ros2 launch py_pubsub pubsub.launch.py 
+# 2. command to use a service: ros2 interface show py_pubsub/srv/AddTwoInts
+# 3. command to run service server : ros2 run py_pubsub service_server
+# 4. command to run service client : ros2 run py_pubsub service_client
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## Problem 1: 
 Unable to write file '/home/deepak/Desktop/Projects/ros2_ws1/ros2_sample_project/src/py_pubsub/py_pubsub/talker.py' (NoPermissions (FileSystemError): Error: EACCES: permission denied, open '/home/deepak/Desktop/Projects/ros2_ws1/ros2_sample_project/src/py_pubsub/py_pubsub/talker.py')

@@ -1,0 +1,6 @@
+# The request consists of two 64-bit integers.
+int64 a
+int64 b
+---
+# The response is a single 64-bit integer.
+int64 sum
