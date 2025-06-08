@@ -42,6 +42,12 @@ WORKDIR /home/rosuser
 # Set up the ROS 2 workspace directory structure.
 RUN mkdir -p /home/rosuser/ros2_ws/src
 
+# --- PERMANENT FIX for 'ros2 not found' ---
+# Automatically source ROS 2 and the local workspace for every new terminal session.
+RUN echo "source /opt/ros/jazzy/setup.bash && \
+         if [ -f /home/rosuser/ros2_ws/install/setup.bash ]; then source /home/rosuser/ros2_ws/install/setup.bash; fi" >> /home/rosuser/.bashrc
+
+
 # --- FIX for Permission Denied ---
 # Change ownership of the entire workspace to the non-root user.
 # This allows colcon to create build/, install/, and log/ directories.
