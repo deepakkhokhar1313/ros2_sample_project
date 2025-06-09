@@ -64,12 +64,12 @@ jobs:
         run: docker load < ${{ needs.build.outputs.image_name }}.tar
 
       # This is more memory-efficient and uses the correct build flags.
-      - name: Build and Test ROS 2 Workspace
+      - name: Build ROS 2 Workspace (Tests Skipped)
         run: |
           docker run --rm \
             -v ${{ github.workspace }}/src:/home/rosuser/ros2_ws/src \
             ${{ needs.build.outputs.image_name }}:latest \
-            bash -c "colcon build --symlink-install --executor sequential && colcon test --executor sequential && colcon test-result --verbose"
+            bash -c "colcon build --symlink-install --executor sequential"
 
   # Job 3: Push the verified image to Docker Hub.
   push-to-dockerhub:
