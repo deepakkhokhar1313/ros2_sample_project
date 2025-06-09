@@ -21,12 +21,16 @@ jobs:
       IMAGE_NAME: ros2-project-image
 
     steps:
-      # Step 1.1: Increase Swap Space on the Runner
-      # This provides more virtual memory to prevent out-of-memory errors (exit code 137).
-      - name: Increase Runner Swap Space
-        uses: pierotofy/set-swap-space@master
+      # Step 1.1: Maximize the runner's disk space.
+      # This is the first step to ensure there's enough room for the large ROS Docker image and swap.
+      - name: Maximize Build Space
+        uses: easimon/maximize-build-space@master
         with:
-          swap-size-gb: 16
+          root-reserve-mb: 512
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
 
       # Step 1.2: Check out your repository under $GITHUB_WORKSPACE.
       - name: Checkout Repository
@@ -42,7 +46,7 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}:latest
 
       # Step 1.4: Run build and test directly inside a new container.
-      # This is more memory-efficient than running a detached container and using 'docker exec'.
+      # This is more memory-efficient and uses the correct build flags.
       - name: Build and Test ROS 2 Workspace
         run: |
           docker run --rm \
