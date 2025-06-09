@@ -7,6 +7,7 @@ from my_interfaces.action import MoveRobot
 from my_interfaces.srv import GetStatus
 from std_msgs.msg import Float64MultiArray
 
+
 class RobotCommanderNode(Node):
 
     def __init__(self):
@@ -38,7 +39,8 @@ class RobotCommanderNode(Node):
         # This logs the position but doesn't do much else for this example.
         # In a real system, this could update a UI or trigger other logic.
         position = [round(p, 2) for p in msg.data]
-        self.get_logger().info(f'Received position: {position}', throttle_duration_sec=1)
+        self.get_logger().info(f'Received position: {
+            position}', throttle_duration_sec=1)
 
     def check_robot_status(self):
         """Callback for the timer to periodically check robot status."""
@@ -50,7 +52,8 @@ class RobotCommanderNode(Node):
         """Callback for when the GetStatus service responds."""
         try:
             response = future.result()
-            self.get_logger().info(f'Periodic Status Check: Robot is {response.status}')
+            self.get_logger().info(
+                f'Periodic Status Check: Robot is {response.status}')
         except Exception as e:
             self.get_logger().error(f'Service call failed {e!r}')
 
@@ -68,7 +71,8 @@ class RobotCommanderNode(Node):
             goal_msg,
             feedback_callback=self.move_feedback_callback)
 
-        self._send_goal_future.add_done_callback(self.move_goal_response_callback)
+        self._send_goal_future.add_done_callback(
+            self.move_goal_response_callback)
 
     def move_goal_response_callback(self, future):
         """Callback for when the server accepts or rejects the move goal."""
@@ -79,7 +83,8 @@ class RobotCommanderNode(Node):
 
         self.get_logger().info('Move goal accepted :)')
         self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.move_get_result_callback)
+        self._get_result_future.add_done_callback(
+            self.move_get_result_callback)
 
     def move_get_result_callback(self, future):
         """Callback for when the final result of the move action is available."""
@@ -92,8 +97,10 @@ class RobotCommanderNode(Node):
 
     def move_feedback_callback(self, feedback_msg):
         """Callback for receiving feedback from the move action."""
-        position = [round(p, 2) for p in [feedback_msg.feedback.current_x, feedback_msg.feedback.current_y]]
-        self.get_logger().info(f'Received move feedback: At position {position}')
+        position = [round(p, 2) for p in [
+            feedback_msg.feedback.current_x, feedback_msg.feedback.current_y]]
+        self.get_logger().info(
+            f'Received move feedback: At position {position}')
 
 
 def main(args=None):

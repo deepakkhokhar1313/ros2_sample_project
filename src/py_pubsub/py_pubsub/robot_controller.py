@@ -6,7 +6,8 @@ from rclpy.node import Node
 # Import all our custom interfaces
 from my_interfaces.action import MoveRobot
 from my_interfaces.srv import GetStatus
-from std_msgs.msg import Float64MultiArray # For publishing position
+from std_msgs.msg import Float64MultiArray  # For publishing position
+
 
 class RobotControllerNode(Node):
 
@@ -53,12 +54,13 @@ class RobotControllerNode(Node):
         """Callback to execute the MoveRobot action goal."""
         target_x = goal_handle.request.target_x
         target_y = goal_handle.request.target_y
-        
-        self.get_logger().info(f'Executing goal: Move to ({target_x}, {target_y})')
+
+        self.get_logger().info(
+            f'Executing goal: Move to ({target_x}, {target_y})')
         self._current_status = "MOVING"
 
         feedback_msg = MoveRobot.Feedback()
-        
+
         # Simulate movement
         while rclpy.ok() and self._current_position != [target_x, target_y]:
             if goal_handle.is_cancel_requested:
@@ -68,15 +70,22 @@ class RobotControllerNode(Node):
                 return MoveRobot.Result(status="Canceled")
 
             # Simple linear movement logic
-            step = self.get_parameter('robot_speed').get_parameter_value().double_value * 0.1
-            if self._current_position[0] < target_x: self._current_position[0] += step
-            if self._current_position[0] > target_x: self._current_position[0] -= step
-            if self._current_position[1] < target_y: self._current_position[1] += step
-            if self._current_position[1] > target_y: self._current_position[1] -= step
-            
+            step = self.get_parameter(
+                'robot_speed').get_parameter_value().double_value * 0.1
+            if self._current_position[0] < target_x:
+                self._current_position[0] += step
+            if self._current_position[0] > target_x:
+                self._current_position[0] -= step
+            if self._current_position[1] < target_y:
+                self._current_position[1] += step
+            if self._current_position[1] > target_y:
+                self._current_position[1] -= step
+
             # Clamp to target to avoid overshooting
-            if abs(self._current_position[0] - target_x) < step: self._current_position[0] = target_x
-            if abs(self._current_position[1] - target_y) < step: self._current_position[1] = target_y
+            if abs(self._current_position[0] - target_x) < step:
+                self._current_position[0] = target_x
+            if abs(self._current_position[1] - target_y) < step:
+                self._current_position[1] = target_y
 
             # Publish current position on the topic
             pos_msg = Float64MultiArray()
@@ -93,7 +102,7 @@ class RobotControllerNode(Node):
         goal_handle.succeed()
         self._current_status = "IDLE"
         self.get_logger().info('Goal reached!')
-        
+
         result = MoveRobot.Result()
         result.status = "Goal Reached"
         return result

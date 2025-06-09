@@ -6,14 +6,16 @@ from rclpy.node import Node
 # Import our custom action interface
 from my_interfaces.action import CountDown
 
+
 class CountDownActionServer(Node):
 
     def __init__(self):
         super().__init__('countdown_action_server')
         self._action_server = ActionServer(
             self,
-            CountDown, # The action type.
-            'countdown',# The name of the action that clients will use to connect.
+            CountDown,  # The action type.
+            # The name of the action that clients will use to connect.
+            'countdown',
             self.execute_callback)
 
     def execute_callback(self, goal_handle):
@@ -35,7 +37,7 @@ class CountDownActionServer(Node):
             feedback_msg.current_number = i
             self.get_logger().info(f'Feedback: {feedback_msg.current_number}')
             goal_handle.publish_feedback(feedback_msg)
-            
+
             # Wait for one second
             time.sleep(1)
 

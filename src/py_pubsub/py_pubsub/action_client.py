@@ -9,6 +9,8 @@ from rclpy.node import Node
 from my_interfaces.action import CountDown
 
 # Define the action client class, inheriting from the base Node class.
+
+
 class CountDownActionClient(Node):
 
     def __init__(self):
@@ -33,8 +35,9 @@ class CountDownActionClient(Node):
         self._action_client.wait_for_server()
 
         # Log that we are sending the goal request.
-        self.get_logger().info(f'Sending goal request: Countdown from {target_number}')
-        
+        self.get_logger().info(
+            f'Sending goal request: Countdown from {target_number}')
+
         # Asynchronously send the goal. This call is non-blocking.
         # It returns a 'future' object that will eventually contain a handle to the goal.
         # We also register 'self.feedback_callback' to handle any feedback messages.

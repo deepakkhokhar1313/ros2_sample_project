@@ -1,6 +1,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
+
 def generate_launch_description():
     """
     Generates the launch description for the publisher-subscriber system.
@@ -15,6 +16,6 @@ def generate_launch_description():
         Node(
             package='py_pubsub',
             executable='listener',
-            name='my_listener_node' # Optional: Assign a custom name
+            name='my_listener_node'  # Optional: Assign a custom name
         )
     ])

@@ -9,7 +9,7 @@ class MinimalPublisher(Node):
 
     def __init__(self):
         super().__init__('minimal_publisher')
-        
+
         # 1. Declare a parameter named 'publish_message' with a default value.
         self.declare_parameter('publish_message', 'Default Hello World')
 
@@ -20,12 +20,13 @@ class MinimalPublisher(Node):
 
     def timer_callback(self):
         # 2. Get the current value of the parameter.
-        my_param = self.get_parameter('publish_message').get_parameter_value().string_value
+        my_param = self.get_parameter(
+            'publish_message').get_parameter_value().string_value
 
         msg = String()
         # 3. Use the parameter's value in the message.
         msg.data = f'{my_param}: {self.i}'
-        
+
         self.publisher_.publish(msg)
         self.get_logger().info(f'Publishing: "{msg.data}"')
         self.i += 1

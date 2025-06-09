@@ -13,11 +13,11 @@ class MinimalClientAsync(Node):
         # Create a client for the 'add_two_ints' service.
         # The service type must match the one used by the server.
         self.client = self.create_client(AddTwoInts, 'add_two_ints')
-        
+
         # Check if the service is available before sending a request.
         while not self.client.wait_for_service(timeout_sec=1.0):
             self.get_logger().info('service not available, waiting again...')
-        
+
         # Create a request object.
         self.req = AddTwoInts.Request()
 
@@ -41,13 +41,14 @@ def main(args=None):
 
     # Create the client node.
     minimal_client = MinimalClientAsync()
-    
+
     # Send the request using the numbers from the command line.
     response = minimal_client.send_request(int(sys.argv[1]), int(sys.argv[2]))
-    
+
     # Log the result.
     minimal_client.get_logger().info(
-        f'Result of add_two_ints: for {sys.argv[1]} + {sys.argv[2]} = {response.sum}'
+        f'Result of add_two_ints: for {
+            sys.argv[1]} + {sys.argv[2]} = {response.sum}'
     )
 
     minimal_client.destroy_node()

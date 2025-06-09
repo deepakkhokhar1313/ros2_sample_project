@@ -11,7 +11,7 @@ class MinimalService(Node):
     def __init__(self):
         # Initialize the Node with the name 'minimal_service'
         super().__init__('minimal_service')
-        
+
         # Create the service. This is the core of the service server.
         self.srv = self.create_service(
             AddTwoInts,                 # The service type
@@ -25,10 +25,10 @@ class MinimalService(Node):
         It receives the request, performs the logic, and populates the response.
         """
         # The request and response objects are of the type we defined in AddTwoInts.srv
-        
+
         # Perform the calculation
         response.sum = request.a + request.b
-        
+
         # Log the request and the result
         self.get_logger().info(
             f'Incoming request\na: {request.a} b: {request.b}\n'
