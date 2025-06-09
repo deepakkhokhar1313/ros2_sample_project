@@ -1,0 +1,4 @@
+# The request is empty
+---
+# The response is the robot's current status
+string status

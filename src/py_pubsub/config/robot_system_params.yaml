@@ -1,0 +1,4 @@
+# Parameter configuration for the final robot system.
+robot_controller:
+  ros__parameters:
+    robot_speed: 2.0

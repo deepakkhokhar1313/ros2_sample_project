@@ -12,7 +12,9 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         # Include all launch files from the 'launch' directory
-        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*.launch.py')))
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*.launch.py'))),
+        # Include all yaml files from the 'config' directory
+        (os.path.join('share', package_name, 'config'), glob(os.path.join('config', '*.yaml')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -28,7 +30,10 @@ setup(
             'service_server = py_pubsub.service_server:main',
             'service_client = py_pubsub.service_client:main',
             'action_server = py_pubsub.action_server:main',
-            'action_client = py_pubsub.action_client:main'
+            'action_client = py_pubsub.action_client:main',
+            'param_talker = py_pubsub.param_talker:main',
+            'robot_controller = py_pubsub.robot_controller:main',
+            'robot_commander = py_pubsub.robot_commander:main',
         ],
     },
 )

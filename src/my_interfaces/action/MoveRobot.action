@@ -1,0 +1,10 @@
+# Goal: The target position for the robot
+float64 target_x
+float64 target_y
+---
+# Result: A status message
+string status
+---
+# Feedback: The robot's current position
+float64 current_x
+float64 current_y

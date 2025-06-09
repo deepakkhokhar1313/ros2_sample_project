@@ -1,0 +1,4 @@
+# This is a parameter configuration file in YAML format.
+minimal_publisher:
+  ros__parameters:
+    publish_message: "This message is from a YAML file!"
