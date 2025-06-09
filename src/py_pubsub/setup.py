@@ -1,6 +1,8 @@
-from setuptools import find_packages, setup
-from glob import glob
 import os
+from glob import glob
+
+from setuptools import find_packages, setup
+
 package_name = 'py_pubsub'
 
 setup(
@@ -11,12 +13,10 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        # Include all launch files from the 'launch' directory
         (os.path.join('share', package_name, 'launch'),
-         glob(os.path.join('launch', '*.launch.py'))),
-        # Include all yaml files from the 'config' directory
+            glob(os.path.join('launch', '*.launch.py'))),
         (os.path.join('share', package_name, 'config'),
-         glob(os.path.join('config', '*.yaml')))
+            glob(os.path.join('config', '*.yaml')))
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -29,11 +29,11 @@ setup(
         'console_scripts': [
             'talker = py_pubsub.talker:main',
             'listener = py_pubsub.listener:main',
+            'param_talker = py_pubsub.param_talker:main',
             'service_server = py_pubsub.service_server:main',
             'service_client = py_pubsub.service_client:main',
             'action_server = py_pubsub.action_server:main',
             'action_client = py_pubsub.action_client:main',
-            'param_talker = py_pubsub.param_talker:main',
             'robot_controller = py_pubsub.robot_controller:main',
             'robot_commander = py_pubsub.robot_commander:main',
         ],
