@@ -48,7 +48,7 @@ jobs:
           docker run --rm \
             -v ${{ github.workspace }}/src:/home/rosuser/ros2_ws/src \
             ${{ env.IMAGE_NAME }}:latest \
-            bash -c "colcon build --symlink-install --executor sequential --cmake-args -j1 && colcon test --executor sequential && colcon test-result --verbose"
+            bash -c "colcon build --symlink-install --executor sequential && colcon test --executor sequential && colcon test-result --verbose"
 
   # Job 2: Push the image to Docker Hub.
   push-to-dockerhub:
